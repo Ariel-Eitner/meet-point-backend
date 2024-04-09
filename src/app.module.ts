@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as morgan from 'morgan';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+// import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { BusinessHoursModule } from './business-hours/business-hours.module';
 import { AppointmentModule } from './appointment/appointment.module';
@@ -15,16 +15,9 @@ import { ProfessionalInfoModule } from './professional-info/professional-info.mo
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URI'),
-      }),
-      inject: [ConfigService],
-    }),
+    MongooseModule.forRoot(
+      'mongodb+srv://ariel10e:ObfKoNhMOOI0g7c3@meet-point.rvzvhii.mongodb.net/?retryWrites=true&w=majority&appName=meet-point',
+    ),
     UsersModule,
     BusinessHoursModule,
     AppointmentModule,
