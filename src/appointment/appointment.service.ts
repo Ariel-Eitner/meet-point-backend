@@ -8,14 +8,18 @@ import { Model, isValidObjectId } from 'mongoose';
 import { Appointment, AppointmentDocument } from './appointment.schema';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { User, UserDocument } from 'src/users/users.schema';
+import {
+  UserCustomBase,
+  UserCustomDocument,
+} from 'src/users/user.custom.schema';
 
 @Injectable()
 export class AppointmentService {
   constructor(
     @InjectModel(Appointment.name)
     private appointmentModel: Model<AppointmentDocument>,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(UserCustomBase.name)
+    private userModel: Model<UserCustomDocument>,
   ) {}
 
   async createAppointment(

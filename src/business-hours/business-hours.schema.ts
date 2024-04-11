@@ -6,7 +6,7 @@ export class BusinessHour {
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'UserCustomBase',
     unique: true,
   })
   professionalId: mongoose.Schema.Types.ObjectId;
