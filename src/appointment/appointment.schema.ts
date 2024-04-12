@@ -13,7 +13,7 @@ export class Appointment {
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserCustomBase',
-    unique: true,
+    // unique: true,
   })
   professionalId: mongoose.Schema.Types.ObjectId;
 
