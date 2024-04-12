@@ -13,6 +13,9 @@ export class CreateUserCustomDto extends CreateUserDto {
   //@IsString()
   //@IsOptional()
   //address?: string;
+  @IsString()
+  @IsOptional()
+  photoUrl?: string;
 
   //@IsString()
   //@IsOptional()
@@ -184,5 +187,4 @@ export class CreateUserCustomDto extends CreateUserDto {
   //@IsString()
   //@IsOptional()
   //websiteUrl?: string;
-
 }

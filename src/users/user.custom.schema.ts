@@ -9,6 +9,9 @@ export class UserCustomBase extends UserBase {
 
   @Prop()
   studies?: string;
+
+  @Prop()
+  photoUrl?: string;
   //@Prop({ required: false })
   //address?: string;
 
