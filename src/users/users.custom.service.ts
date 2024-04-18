@@ -9,12 +9,24 @@ import { Model } from 'mongoose';
 import { UserCustomBase, UserCustomDocument } from './user.custom.schema';
 import { CreateUserCustomDto } from './create-user.custom.dto';
 import { UpdateUserDto } from './update-user.custom.dto';
+import {
+  Appointment,
+  AppointmentDocument,
+} from 'src/appointment/appointment.schema';
+import {
+  BusinessHour,
+  BusinessHourDocument,
+} from 'src/business-hours/business-hours.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserCustomBase.name)
     protected userModel: Model<UserCustomDocument>,
+    @InjectModel(Appointment.name)
+    private appointmentModel: Model<AppointmentDocument>,
+    @InjectModel(BusinessHour.name)
+    private businessHourModel: Model<BusinessHourDocument>,
   ) {}
 
   async createUser(
@@ -114,11 +126,38 @@ export class UsersService {
   }
 
   async deleteUser(id: string): Promise<{ message: string }> {
-    const result = await this.userModel.findByIdAndDelete({ _id: id }).exec();
-    if (!result) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+    const session = await this.userModel.db.startSession();
+    try {
+      session.startTransaction();
+
+      // Intenta eliminar el usuario
+      const result = await this.userModel
+        .findByIdAndDelete(id)
+        .session(session)
+        .exec();
+      if (!result) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      await this.appointmentModel
+        .deleteMany({ professionalId: id })
+        .session(session)
+        .exec();
+
+      await this.businessHourModel
+        .deleteMany({ professionalId: id })
+        .session(session)
+        .exec();
+
+      await session.commitTransaction();
+      return { message: 'User and all related data deleted successfully.' };
+    } catch (error) {
+      // Si hay un error, revertimos la transacción
+      await session.abortTransaction();
+      throw error; // Puedes decidir lanzar el error o manejarlo de manera diferente
+    } finally {
+      session.endSession();
     }
-    return { message: 'User deleted successfully.' };
   }
 
   async findUsers(

@@ -12,6 +12,7 @@ export class UserCustomBase extends UserBase {
 
   @Prop()
   photoUrl?: string;
+
   //@Prop({ required: false })
   //address?: string;
 
